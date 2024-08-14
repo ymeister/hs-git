@@ -1,7 +1,9 @@
 dist
+dist-newstyle
 *.o
 *.hi
 Hit
 .stack-work
 .cabal-sandbox
 cabal.sandbox.config
+cabal.project.local
