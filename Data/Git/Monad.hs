@@ -18,7 +18,6 @@
 -- You can also easily create a new commit: see 'CommitM' and 'withNewCommit'
 --
 
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE Rank2Types #-}
@@ -76,7 +75,6 @@ module Data.Git.Monad
     ) where
 
 
--- import qualified Control.Monad.Fail as Fail
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
@@ -242,9 +240,6 @@ instance Applicative GitM where
 instance Monad GitM where
     return = returnGitM
     (>>=)  = bindGitM
-#if MIN_VERSION_base(4,13,0)
-instance MonadFail GitM where
-#endif
     fail   = failGitM
 
 instance GitMonad GitM where
@@ -318,9 +313,6 @@ instance Applicative CommitAccessM where
 instance Monad CommitAccessM where
     return = returnCommitAccessM
     (>>=)  = bindCommitAccessM
-#if MIN_VERSION_base(4,13,0)
-instance MonadFail CommitAccessM where
-#endif
     fail   = failCommitAccessM
 
 instance GitMonad CommitAccessM where
@@ -431,11 +423,7 @@ getDir fp = do
 -- >        l <- getDir []
 -- >        liftGit $ print l
 --
-withCommit :: (Resolvable ref, GitMonad git
-#if MIN_VERSION_base(4,13,0)
-              , MonadFail git
-#endif
-              )
+withCommit :: (Resolvable ref, GitMonad git)
            => ref
                 -- ^ the commit revision or reference to open
            -> CommitAccessM a
@@ -486,9 +474,6 @@ instance Applicative CommitM where
 instance Monad CommitM where
     return = returnCommitM
     (>>=)  = bindCommitM
-#if MIN_VERSION_base(4,13,0)
-instance MonadFail CommitM where
-#endif
     fail   = failCommitM
 
 instance GitMonad CommitM where
@@ -614,11 +599,7 @@ deleteFile path = do
 -- >        setFile ["README.md"] $ readmeContent <> "just add some more description\n"
 -- >    branchWrite "master" r
 --
-withNewCommit :: (GitMonad git, Resolvable rev
-#if MIN_VERSION_base(4,13,0)
-                 , MonadFail git
-#endif
-                 )
+withNewCommit :: (GitMonad git, Resolvable rev)
               => Git.Person
                 -- ^ by default a commit must have an Author and a Committer.
                 --
@@ -689,11 +670,7 @@ withNewCommit p mPrec m = do
 --         )
 -- @
 --
-withBranch :: (GitMonad git
-#if MIN_VERSION_base(4,13,0)
-              , MonadFail git
-#endif
-              )
+withBranch :: GitMonad git
            => Git.Person
                 -- ^ the default Author and Committer (see 'withNewCommit')
            -> Git.RefName
