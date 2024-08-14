@@ -1,7 +1,16 @@
-Name:                git
-Version:             0.3.0
-Synopsis:            Git operations in haskell
-Description:
+cabal-version:      >=1.8
+name:               git
+version:            0.3.0
+license:            BSD3
+license-file:       LICENSE
+copyright:          Vincent Hanquez <vincent@snarc.org>
+maintainer:         Vincent Hanquez <vincent@snarc.org>
+author:             Vincent Hanquez <vincent@snarc.org>
+stability:          experimental
+tested-with:        ghc ==7.8.4 ghc ==7.10.3 ghc ==8.0.2
+homepage:           https://github.com/vincenthz/hs-git
+synopsis:           Git operations in haskell
+description:
     .
     A Haskell implementation of git storage operations, allowing users
     to manipulate git repositories (read and write).
@@ -11,90 +20,86 @@ Description:
     This is strictly only manipulating the git store (what's inside the .git directory),
     and doesn't do anything with the index or your working directory files.
     .
-License:             BSD3
-License-file:        LICENSE
-Copyright:           Vincent Hanquez <vincent@snarc.org>
-Author:              Vincent Hanquez <vincent@snarc.org>
-Maintainer:          Vincent Hanquez <vincent@snarc.org>
-Category:            Development
-Stability:           experimental
-Build-Type:          Simple
-Homepage:            https://github.com/vincenthz/hs-git
-tested-with:         GHC == 7.8.4, GHC == 7.10.3, GHC == 8.0.2
-Cabal-Version:       >=1.8
-data-files:          README.md
-extra-source-files:  tests/*.hs
 
-Library
-  Build-Depends:     base >= 4 && < 5
-                   , basement
-                   , bytestring >= 0.9
-                   , containers
-                   , memory >= 0.13
-                   , cryptonite >= 0.22
-                   , vector
-                   , random
-                   , zlib
-                   , zlib-bindings >= 0.1 && < 0.2
-                   , hourglass >= 0.2
-                   , unix-compat
-                   , utf8-string
-                   -- to remove
-                   , system-filepath
-                   , system-fileio
-  Exposed-modules:   Data.Git
-                     Data.Git.Monad
-                     Data.Git.Types
-                     Data.Git.Storage
-                     Data.Git.Storage.PackIndex
-                     Data.Git.Storage.Pack
-                     Data.Git.Storage.Object
-                     Data.Git.Storage.Loose
-                     Data.Git.Named
-                     Data.Git.Delta
-                     Data.Git.Ref
-                     Data.Git.Revision
-                     Data.Git.Repository
-                     Data.Git.Diff
-                     Data.Git.Diff.Patience
-  Other-modules:     Data.Git.Internal
-                     Data.Git.Imports
-                     Data.Git.OS
-                     Data.Git.Config
-                     Data.Git.Storage.FileReader
-                     Data.Git.Storage.FileWriter
-                     Data.Git.Storage.CacheFile
-                     Data.Git.Path
-                     Data.Git.Parser
-                     Data.Git.WorkTree
-  ghc-options:       -Wall -fno-warn-unused-imports
- -- -fno-warn-missing-signatures
-
-
-Test-Suite test-unit
-  type:              exitcode-stdio-1.0
-  hs-source-dirs:    tests
-  Main-Is:           Tests.hs
-  Build-depends:     base >= 3 && < 7
-                   , bytestring
-                   , tasty
-                   , tasty-quickcheck
-                   , hourglass
-                   , git
-
-Test-Suite test-repository
-  type:              exitcode-stdio-1.0
-  hs-source-dirs:    tests
-  Main-Is:           Repo.hs
-  other-modules:     Monad
-  Build-depends:     base >= 3 && < 7
-                   , bytestring
-                   , tasty
-                   , tasty-quickcheck
-                   , hourglass
-                   , bytedump >= 1.0
-                   , git
+category:           Development
+build-type:         Simple
+data-files:         README.md
+extra-source-files: tests/*.hs
 
 source-repository head
-  type: git
-  location: https://github.com/vincenthz/hs-git
+    type:     git
+    location: https://github.com/vincenthz/hs-git
+
+library
+    exposed-modules:
+        Data.Git
+        Data.Git.Monad
+        Data.Git.Types
+        Data.Git.Storage
+        Data.Git.Storage.PackIndex
+        Data.Git.Storage.Pack
+        Data.Git.Storage.Object
+        Data.Git.Storage.Loose
+        Data.Git.Named
+        Data.Git.Delta
+        Data.Git.Ref
+        Data.Git.Revision
+        Data.Git.Repository
+        Data.Git.Diff
+        Data.Git.Diff.Patience
+
+    other-modules:
+        Data.Git.Internal
+        Data.Git.Imports
+        Data.Git.OS
+        Data.Git.Config
+        Data.Git.Storage.FileReader
+        Data.Git.Storage.FileWriter
+        Data.Git.Storage.CacheFile
+        Data.Git.Path
+        Data.Git.Parser
+        Data.Git.WorkTree
+
+    ghc-options:     -Wall -fno-warn-unused-imports
+    build-depends:
+        base >=4 && <5,
+        basement <0.1,
+        bytestring >=0.9,
+        containers,
+        memory >=0.13 && <0.19,
+        cryptonite >=0.22 && <0.31,
+        vector <0.14,
+        random <1.3,
+        zlib <0.8,
+        zlib-bindings >=0.1 && <0.2,
+        hourglass >=0.2 && <0.3,
+        unix-compat <0.8,
+        utf8-string <1.1,
+        system-filepath <0.5,
+        system-fileio <0.4
+
+test-suite test-unit
+    type:           exitcode-stdio-1.0
+    main-is:        Tests.hs
+    hs-source-dirs: tests
+    build-depends:
+        base >=3 && <7,
+        bytestring,
+        tasty <1.6,
+        tasty-quickcheck <0.12,
+        hourglass <0.3,
+        git
+
+test-suite test-repository
+    type:           exitcode-stdio-1.0
+    main-is:        Repo.hs
+    hs-source-dirs: tests
+    other-modules:  Monad
+    build-depends:
+        base >=3 && <7,
+        bytestring,
+        tasty <1.6,
+        tasty-quickcheck <0.12,
+        hourglass <0.3,
+        bytedump >=1.0 && <1.1,
+        git

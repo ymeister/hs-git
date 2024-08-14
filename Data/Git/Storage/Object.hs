@@ -54,7 +54,9 @@ import Data.List (intersperse)
 import Data.Word
 import Text.Printf
 
-#if MIN_VERSION_bytestring(0,10,0)
+#if MIN_VERSION_bytestring(0,11,0)
+import Data.ByteString.Builder hiding (word8)
+#elif MIN_VERSION_bytestring(0,10,0)
 import Data.ByteString.Lazy.Builder hiding (word8)
 #else
 import qualified Data.ByteString.Lazy.Char8 as LC

@@ -18,6 +18,7 @@
 -- You can also easily create a new commit: see 'CommitM' and 'withNewCommit'
 --
 
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE Rank2Types #-}
@@ -127,7 +128,7 @@ instance Resolvable Git.RefName where
 
 -- | Basic operations common between the different Monads defined in this
 -- package.
-class (Functor m, Applicative m, Monad m) => GitMonad m where
+class (Functor m, Applicative m, Monad m, MonadFail m) => GitMonad m where
     -- | the current Monad must allow access to the current Git
     getGit :: m (Git.Git SHA1)
     liftGit :: IO a -> m a
@@ -238,9 +239,13 @@ instance Applicative GitM where
     (<*>) = appendGitM
 
 instance Monad GitM where
-    return = returnGitM
     (>>=)  = bindGitM
+#if !MIN_VERSION_base(4,13,0)
     fail   = failGitM
+#endif
+
+instance MonadFail GitM where
+    fail = failGitM
 
 instance GitMonad GitM where
     getGit  = getGitM
@@ -311,9 +316,13 @@ instance Applicative CommitAccessM where
     (<*>) = appendCommitAccessM
 
 instance Monad CommitAccessM where
-    return = returnCommitAccessM
     (>>=)  = bindCommitAccessM
+#if !MIN_VERSION_base(4,13,0)
     fail   = failCommitAccessM
+#endif
+
+instance MonadFail CommitAccessM where
+  fail = failCommitAccessM
 
 instance GitMonad CommitAccessM where
     getGit  = getCommitAccessM
@@ -472,9 +481,13 @@ instance Applicative CommitM where
     (<*>) = appendCommitM
 
 instance Monad CommitM where
-    return = returnCommitM
     (>>=)  = bindCommitM
+#if !MIN_VERSION_base(4,13,0)
     fail   = failCommitM
+#endif
+
+instance MonadFail CommitM where
+  fail = failCommitM
 
 instance GitMonad CommitM where
     getGit  = getCommitM
